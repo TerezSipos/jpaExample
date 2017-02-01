@@ -1,4 +1,4 @@
-package user_management_jpa;
+package sipost.user.management.jpa;
 
 import java.io.Serializable;
 import javax.persistence.*;
