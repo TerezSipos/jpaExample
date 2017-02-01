@@ -12,6 +12,7 @@
 		<dependency>
 			<groupId>sipost</groupId>
 			<artifactId>user_management_jpa</artifactId>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 </project>

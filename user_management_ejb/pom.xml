@@ -36,6 +36,7 @@
 		<dependency>
 			<groupId>sipost</groupId>
 			<artifactId>user_management_jpa</artifactId>
+			
 		</dependency>
 
 		<dependency>

@@ -16,7 +16,6 @@ public class UserBean implements IUser{
 
 	@Override
 	public List<User> getAllUsers() {
-		System.out.println("userBean getAllUser");
 		@SuppressWarnings("unchecked")
 		List<User> users = (List<User>)oEntityManager.createNamedQuery("User.findAll").getResultList();
 		return users;

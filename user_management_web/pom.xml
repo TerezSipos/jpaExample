@@ -12,7 +12,9 @@
 	<dependencies>
 		<dependency>
 			<groupId>sipost</groupId>
-			<artifactId>user_management_common</artifactId>
+			<artifactId>user_management_ejb</artifactId>
+			<type>ejb</type>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
