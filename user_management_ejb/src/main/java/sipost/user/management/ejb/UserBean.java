@@ -1,4 +1,4 @@
-package user_management_ejb;
+package sipost.user.management.ejb;
 
 import java.util.List;
 
@@ -11,11 +11,12 @@ import sipost.user.management.jpa.User;
 
 @Stateless
 public class UserBean implements IUser{
-	@PersistenceContext(unitName = "user_management_jpa")
+	@PersistenceContext(unitName = "UserManagement")
 	private EntityManager oEntityManager;
 
 	@Override
 	public List<User> getAllUsers() {
+		System.out.println("userBean getAllUser");
 		@SuppressWarnings("unchecked")
 		List<User> users = (List<User>)oEntityManager.createNamedQuery("User.findAll").getResultList();
 		return users;

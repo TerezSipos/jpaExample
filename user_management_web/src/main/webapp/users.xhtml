@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2" />
+<title>user-management-web | echo_list</title>
+</head>
+<body>
+	<h1>Get all echoes</h1>
+	#{userBean.message}
+	<ui:repeat value="#{userBean.allUsers}" var="value">
+     #{value}<br />
+	</ui:repeat>
+	<br />
+	<br />
+	<h1>Store Echo</h1>
+	<h:form>
+		<h:inputText binding="#{valtozo1}" />
+		<h:commandButton value="Submit"
+			action="#{echoer.storeEcho(valtozo1.value)}" />
+	</h:form>
+	<br />
+	<br />
+	<h1>Update Echo by Id</h1>
+	<h:form>
+		<h:inputText title="id" value="#{echoer.searchId}" />
+		<h:inputText title="new message" value="#{echoer.updateName}" />
+		<h:commandButton value="Submit" action="#{echoer.updateEcho()}" />
+	</h:form>
+	<br />
+	<br />
+	<h1>Search by ID</h1>
+	<h:form id="form">
+		<h:inputText title="id" size="10" value="#{echoer.id}" />
+		<h:commandButton id="submitButton" value="Search"
+			action="#{echoer.getEchoById(echoer.id)}">
+		</h:commandButton>
+	</h:form>
+	<h2>Search result</h2>
+	---#{echoer.echo}---
+	<br />
+	<br />
+	<h1>Remove by id</h1>
+	<h:form>
+		<h:inputText value="#{echoer.searchId}" />
+		<h:commandButton value="Submit" action="#{echoer.removeEcho}" />
+	</h:form>
+	<br />
+	<br />
+	<h1>Search echo by message</h1>
+	<h:form>
+		<h:inputText binding="#{valtozo}" />
+		<h:commandButton binding="#{eredmeny}" value="Submit" action="#{echoer.searchEchos(valtozo.value)}" />
+	</h:form>	
+	<ui:repeat value="#{echoer.oEchos}" var="value">
+    #{value.message} <br />
+	</ui:repeat>
+</body>
+</html>

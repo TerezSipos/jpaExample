@@ -4,6 +4,12 @@
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <dependent-module archiveName="user_management_common-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/user_management_common/user_management_common">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="user_management_jpa-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/user_management_jpa/user_management_jpa">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="user_management_web"/>
         <property name="java-output-path" value="/user_management_web/target/classes"/>
     </wb-module>

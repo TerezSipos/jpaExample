@@ -9,6 +9,19 @@
 	<artifactId>user_management_ejb</artifactId>
 	<packaging>ejb</packaging>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-ejb-plugin</artifactId>
+				<version>${version.maven-ejb-plugin}</version>
+				<configuration>
+					<ejbVersion>3.0</ejbVersion>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.hibernate.javax.persistence</groupId>
@@ -18,6 +31,11 @@
 		<dependency>
 			<groupId>org.jboss.spec.javax.ejb</groupId>
 			<artifactId>jboss-ejb-api_3.2_spec</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>sipost</groupId>
+			<artifactId>user_management_jpa</artifactId>
 		</dependency>
 
 		<dependency>
