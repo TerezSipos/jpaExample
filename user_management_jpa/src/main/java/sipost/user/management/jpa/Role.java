@@ -1,17 +1,22 @@
 package sipost.user.management.jpa;
 
 import java.io.Serializable;
-import javax.persistence.*;
-import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 /**
  * The persistent class for the roles database table.
  * 
  */
 @Entity
-@Table(name="roles")
-@NamedQuery(name="Role.findAll", query="SELECT r FROM Role r")
+@Table(name = "roles")
+
+@NamedQueries({@NamedQuery(name = "Role.findAll", query = "SELECT r FROM Role r"),
+	@NamedQuery(name = "Role.maxId", query = "SELECT max(r.id) FROM Role r")})
 public class Role implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -19,10 +24,6 @@ public class Role implements Serializable {
 	private int id;
 
 	private String role;
-
-	//bi-directional many-to-many association to User
-	@ManyToMany(mappedBy="roles")
-	private List<User> users;
 
 	public Role() {
 	}
@@ -43,12 +44,9 @@ public class Role implements Serializable {
 		this.role = role;
 	}
 
-	public List<User> getUsers() {
-		return this.users;
-	}
-
-	public void setUsers(List<User> users) {
-		this.users = users;
+	@Override
+	public String toString() {
+		return "Role:" + role;
 	}
 
 }
