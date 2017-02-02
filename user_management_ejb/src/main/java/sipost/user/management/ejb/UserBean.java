@@ -28,6 +28,7 @@ public class UserBean implements IUser{
 		User u=oEntityManager.find(User.class, id);
 		return u;
 		}catch (PersistenceException e) {
+			e.printStackTrace();
 			return null;
 		}		
 	}

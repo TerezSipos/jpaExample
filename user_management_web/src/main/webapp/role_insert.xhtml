@@ -9,23 +9,17 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2" />
 <title>user-management-web | echo_list</title>
 </head>
-<body>	
-	<h:form rendered="#{userBean.getUserById(userBean.selectedUserid) != null}">
-		<h:inputText title="id" value="#{userBean.user.username}" />
-		<h:selectManyListbox value="#{userBean.rolesId}"
-			converter="javax.faces.Integer">
-			<f:selectItems value="#{roleBean.allRoles}" var="y"
-				itemLabel="#{y.role}" itemValue="#{y.id}" />
-		</h:selectManyListbox>
-
+<body>
+	<h:form>
+		<h:inputText title="id" value="#{roleBean.newRole().role}" />
 		<h:commandButton value="Submit"
-			actionListener="#{userBean.updateUser(userBean.user)}"
+			actionListener="#{roleBean.insertRole(roleBean.oRole)}"
 			action="users_list?faces-redirect=true" />
 
 	</h:form>
 
-	<h:column rendered="#{userBean.user.id == 0}">
-			Please go back and select the user what u like to update	
+	<h:column rendered="#{roleBean.oRole.id == 0}">
+			Please go back and select one role
 		</h:column>
 	<h:form>
 		<h:commandButton value="back" action="users_list?faces-redirect=true" />
