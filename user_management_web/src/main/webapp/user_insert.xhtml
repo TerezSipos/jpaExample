@@ -12,12 +12,14 @@
 <body>
 	#{userBean.setUser(null)}	
 	<h:form>
+	<h:outputLabel>Username</h:outputLabel>
 		<h:inputText title="username" value="#{userBean.user.username}" />
+		<h:outputLabel>Chose one or more role</h:outputLabel>
 		<h:selectManyListbox value="#{userBean.rolesId}" converter="javax.faces.Integer">
 			<f:selectItems value="#{roleBean.allRoles}" var="y"
 				itemLabel="#{y.role}" itemValue="#{y.id}" />
 		</h:selectManyListbox>
-		<h:commandButton value="Submit"
+		<h:commandButton value="Insert"
 			actionListener="#{userBean.insertUser(userBean.user)}"
 			action="users_list?faces-redirect=true" />
 		<h:commandButton value="back" action="users_list?faces-redirect=true" />

@@ -10,12 +10,13 @@
 <title>user-management-web | echo_list</title>
 </head>
 <body>
+
 	<h:form rendered="#{roleBean.getRoleById(roleBean.selectedRoleid).id != 0}">
+	<h:outputLabel>Modify the role</h:outputLabel>
 		<h:inputText title="id" value="#{roleBean.oRole.role}" />
 		<h:commandButton value="Submit"
 			actionListener="#{roleBean.updateRole(roleBean.oRole)}"
 			action="users_list?faces-redirect=true" />
-
 	</h:form>
 
 	<h:column rendered="#{roleBean.oRole.id == 0}">

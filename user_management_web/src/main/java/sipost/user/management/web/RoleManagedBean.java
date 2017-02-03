@@ -10,6 +10,7 @@ import javax.naming.NamingException;
 
 import sipost.user.management.common.IRole;
 import sipost.user.management.jpa.Role;
+import org.jboss.logging.Logger;
 
 @Named("roleBean")
 @ApplicationScoped
@@ -18,14 +19,16 @@ public class RoleManagedBean implements IRole {
 	private List<Role> roles=new ArrayList<>();
 	private Role oRole;
 	private int selectedRoleid=0;
+	private Logger oLogger = Logger.getLogger(RoleManagedBean.class);
+
 	
 	private IRole getRoleBean() {
 		if (oRoleBean == null) {
 			try {
 				InitialContext jndi = new InitialContext();
 				oRoleBean = (IRole) jndi.lookup(IRole.jndiNAME);
-			} catch (NamingException e) {
-				e.printStackTrace();
+			} catch (NamingException e) {				
+				oLogger.error(e.getMessage());
 			} 
 		}
 		return oRoleBean;

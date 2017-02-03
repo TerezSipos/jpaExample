@@ -11,18 +11,16 @@
 </head>
 <body>
 	<h:form>
+		<h:outputLabel>Role:</h:outputLabel>
 		<h:inputText title="id" value="#{roleBean.newRole().role}" />
-		<h:commandButton value="Submit"
+		<h:commandButton value="Insert"
 			actionListener="#{roleBean.insertRole(roleBean.oRole)}"
 			action="users_list?faces-redirect=true" />
 
-	</h:form>
-
-	<h:column rendered="#{roleBean.oRole.id == 0}">
-			Please go back and select one role
-		</h:column>
-	<h:form>
 		<h:commandButton value="back" action="users_list?faces-redirect=true" />
 	</h:form>
+
+	
+
 </body>
 </html>

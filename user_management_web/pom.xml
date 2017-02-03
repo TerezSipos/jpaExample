@@ -11,6 +11,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.jboss.logging</groupId>
+			<artifactId>jboss-logging</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>sipost</groupId>
 			<artifactId>user_management_ejb</artifactId>
 			<type>ejb</type>

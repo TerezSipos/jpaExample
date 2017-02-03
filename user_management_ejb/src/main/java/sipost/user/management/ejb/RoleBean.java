@@ -8,6 +8,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
+import org.jboss.logging.Logger;
+
 import sipost.user.management.common.IRole;
 import sipost.user.management.jpa.Role;
 
@@ -15,15 +17,16 @@ import sipost.user.management.jpa.Role;
 public class RoleBean implements IRole {
 	@PersistenceContext(unitName = "UserManagement")
 	private EntityManager oEntityManager;
+	private Logger oLogger = Logger.getLogger(RoleBean.class);
 
 	@Override
 	public List<Role> getAllRoles() {
-		try{
-		@SuppressWarnings("unchecked")
-		List<Role> roles = (List<Role>) oEntityManager.createNamedQuery("Role.findAll").getResultList();
-		return roles;
-		}catch (PersistenceException e) {
-			e.printStackTrace();
+		try {
+			@SuppressWarnings("unchecked")
+			List<Role> roles = (List<Role>) oEntityManager.createNamedQuery("Role.findAll").getResultList();
+			return roles;
+		} catch (PersistenceException e) {
+			oLogger.error(e.getMessage());
 			return new ArrayList<>();
 		}
 	}
@@ -42,8 +45,8 @@ public class RoleBean implements IRole {
 	public void insertRole(Role role) {
 		try {
 			int n = ((Number) oEntityManager.createNamedQuery("Role.maxId").getSingleResult()).intValue();
-			role.setId(n+1);
-			oEntityManager.persist(role);	
+			role.setId(n + 1);
+			oEntityManager.persist(role);
 			oEntityManager.flush();
 		} catch (PersistenceException e) {
 			e.printStackTrace();
@@ -53,7 +56,7 @@ public class RoleBean implements IRole {
 	@Override
 	public void deleteRole(int id) {
 		try {
-			Role r=oEntityManager.find(Role.class, id);
+			Role r = oEntityManager.find(Role.class, id);
 			oEntityManager.remove(r);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -64,8 +67,8 @@ public class RoleBean implements IRole {
 	@Override
 	public void updateRole(Role role) {
 		try {
-			Role r=oEntityManager.find(Role.class, role.getId());
-			if(r!=null){
+			Role r = oEntityManager.find(Role.class, role.getId());
+			if (r != null) {
 				oEntityManager.merge(role);
 			}
 		} catch (Exception e) {

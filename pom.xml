@@ -24,9 +24,16 @@
 		<version.maven-war-plugin>3.0.0</version.maven-war-plugin>
 		<version.maven-ear-plugin>2.10.1</version.maven-ear-plugin>
 	</properties>
-	
+
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>org.jboss.logging</groupId>
+				<artifactId>jboss-logging</artifactId>
+				<version>3.3.0.Final</version>
+				<scope>provided</scope>
+			</dependency>
+
 			<dependency>
 				<groupId>org.hibernate.javax.persistence</groupId>
 				<artifactId>hibernate-jpa-2.1-api</artifactId>

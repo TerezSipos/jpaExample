@@ -19,6 +19,7 @@ public class UserManagedBean implements IUser {
 	private User user;
 	private int selectedUserid;
 	private List<Integer> rolesId = new ArrayList<>();
+	private Exception exeptionMessage;
 
 	private IUser getUserBean() {
 		if (oUserBean == null) {
@@ -26,6 +27,7 @@ public class UserManagedBean implements IUser {
 				InitialContext jndi = new InitialContext();
 				oUserBean = (IUser) jndi.lookup(IUser.jndiNAME);
 			} catch (NamingException e) {
+				exeptionMessage = e;
 				e.printStackTrace();
 			}
 		}
@@ -42,26 +44,36 @@ public class UserManagedBean implements IUser {
 		if (id != 0) {
 			user = getUserBean().getUserById(id);
 		}
-		return user;
+		try {
+			return user;
+		} catch (Exception e) {
+			exeptionMessage = e;
+			throw e;
+		}
 	}
 
 	@Override
 	public void insertUser(User user) {
+		try{
 		getUserBean().insertUser(user);
+		}catch (Exception e) {
+			exeptionMessage=e;
+			throw e;
+		}
 	}
 
 	@Override
 	public void deleteUser(int id) {
 		getUserBean().deleteUser(id);
-		selectedUserid=0;
-		user=null;
+		selectedUserid = 0;
+		user = null;
 
 	}
 
 	@Override
 	public void updateUser(User p_user) {
 		getUserBean().updateUser(p_user);
-		selectedUserid=0;
+		selectedUserid = 0;
 	}
 
 	public int getSelectedUserid() {
@@ -73,11 +85,11 @@ public class UserManagedBean implements IUser {
 	}
 
 	public User getUser() {
-		if (user ==null)
+		if (user == null)
 			user = new User();
 		return user;
 	}
-		
+
 	public void setUser(User user) {
 		this.user = user;
 	}
@@ -92,14 +104,14 @@ public class UserManagedBean implements IUser {
 	}
 
 	public void setRolesId(List<Integer> roles) {
-		if(!roles.isEmpty()){
-		List<Role> userRoles = new ArrayList<>();
-		for (int role : roles) {
-			Role userRole = new Role();
-			userRole.setId(role);
-			userRoles.add(userRole);
-		}
-		getUser().setRoles(userRoles);
+		if (!roles.isEmpty()) {
+			List<Role> userRoles = new ArrayList<>();
+			for (int role : roles) {
+				Role userRole = new Role();
+				userRole.setId(role);
+				userRoles.add(userRole);
+			}
+			getUser().setRoles(userRoles);
 		}
 	}
 

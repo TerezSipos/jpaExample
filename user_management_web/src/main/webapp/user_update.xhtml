@@ -11,7 +11,9 @@
 </head>
 <body>	
 	<h:form rendered="#{userBean.getUserById(userBean.selectedUserid) != null}">
+	<h:outputLabel>Username</h:outputLabel>
 		<h:inputText title="id" value="#{userBean.user.username}" />
+		<h:outputLabel>Select one or more role</h:outputLabel>
 		<h:selectManyListbox value="#{userBean.rolesId}"
 			converter="javax.faces.Integer">
 			<f:selectItems value="#{roleBean.allRoles}" var="y"
