@@ -11,14 +11,14 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.jboss.logging</groupId>
-			<artifactId>jboss-logging</artifactId>
+			<groupId>org.jboss.spec.javax.servlet</groupId>
+			<artifactId>jboss-servlet-api_3.1_spec</artifactId>			
 			<scope>provided</scope>
 		</dependency>
+		
 		<dependency>
-			<groupId>sipost</groupId>
-			<artifactId>user_management_ejb</artifactId>
-			<type>ejb</type>
+			<groupId>org.jboss.logging</groupId>
+			<artifactId>jboss-logging</artifactId>
 			<scope>provided</scope>
 		</dependency>
 
@@ -42,5 +42,11 @@
 			<artifactId>cdi-api</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>sipost</groupId>
+			<artifactId>user_management_ejb</artifactId>
+			<type>ejb</type>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 </project>
