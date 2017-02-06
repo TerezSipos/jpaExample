@@ -13,20 +13,24 @@
 <title>user-management-web | echo_list</title>
 </head>
 <body>
-	#{userBean.setUser(null)}	
+	#{userBean.setUser(null)}
 	<h:form>
-	<h:outputLabel>Username</h:outputLabel>
+		<h1>Create a new user</h1>
+		<h:outputLabel>Username</h:outputLabel>
 		<h:inputText title="username" value="#{userBean.user.username}" />
+		<br />
 		<h:outputLabel>Chose one or more role</h:outputLabel>
-		<h:selectManyListbox value="#{userBean.rolesId}" converter="javax.faces.Integer">
+		<h:selectManyListbox value="#{userBean.rolesId}"
+			converter="javax.faces.Integer">
 			<f:selectItems value="#{roleBean.allRoles}" var="y"
 				itemLabel="#{y.role}" itemValue="#{y.id}" />
 		</h:selectManyListbox>
+		<br />
 		<h:commandButton value="Insert"
 			actionListener="#{userBean.insertUser(userBean.user)}"
 			action="users_list?faces-redirect=true" />
 		<h:commandButton value="back" action="users_list?faces-redirect=true" />
 	</h:form>
-	
+
 </body>
 </html>

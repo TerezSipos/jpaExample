@@ -12,17 +12,20 @@
 </f:metadata>
 <title>user-management-web | echo_list</title>
 </head>
-<body>	
-	<h:form rendered="#{userBean.getUserById(userBean.selectedUserid) != null}">
-	<h:outputLabel>Username</h:outputLabel>
+<body>
+	<h:form
+		rendered="#{userBean.getUserById(userBean.selectedUserid) != null}">
+		<h1>Edit user info</h1>
+		<h:outputLabel>Username</h:outputLabel>
 		<h:inputText title="id" value="#{userBean.user.username}" />
+		<br />
 		<h:outputLabel>Select one or more role</h:outputLabel>
 		<h:selectManyListbox value="#{userBean.rolesId}"
 			converter="javax.faces.Integer">
 			<f:selectItems value="#{roleBean.allRoles}" var="y"
 				itemLabel="#{y.role}" itemValue="#{y.id}" />
 		</h:selectManyListbox>
-
+		<br />
 		<h:commandButton value="Submit"
 			actionListener="#{userBean.updateUser(userBean.user)}"
 			action="users_list?faces-redirect=true" />
@@ -30,7 +33,7 @@
 	</h:form>
 
 	<h:column rendered="#{userBean.user.id == 0}">
-			Please go back and select the user what u like to update	
+			Please go back and select the user what u like to update.	
 		</h:column>
 	<h:form>
 		<h:commandButton value="back" action="users_list?faces-redirect=true" />

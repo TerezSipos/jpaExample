@@ -46,7 +46,8 @@ public class UserManagedBean implements IUser {
 	public List<User> getAllUsers() {
 		errorMessage = null;
 		try {
-			return getUserBean().getAllUsers();
+			search= getUserBean().getAllUsers();
+			return search;
 		} catch (EjbExeption e) {
 			errorMessage = e.getMessage();
 			throw new WebExeption(e.getMessage());
@@ -76,6 +77,7 @@ public class UserManagedBean implements IUser {
 		errorMessage = null;
 		try {
 			getUserBean().insertUser(user);
+			search=null;
 		} catch (EjbExeption e) {
 			errorMessage = e.getMessage();
 			throw new WebExeption(e.getMessage());
@@ -91,6 +93,7 @@ public class UserManagedBean implements IUser {
 		}
 		try {
 			getUserBean().deleteUser(id);
+			search=null;
 			selectedUserid = 0;
 			user = null;
 		} catch (EjbExeption e) {
@@ -105,6 +108,7 @@ public class UserManagedBean implements IUser {
 		try {
 			selectedUserid = 0;
 			getUserBean().updateUser(p_user);
+			getAllUsers();
 		} catch (EjbExeption e) {
 			errorMessage = e.getMessage();
 			throw new WebExeption(e.getMessage());
@@ -195,6 +199,9 @@ public class UserManagedBean implements IUser {
 		return false;
 	}
 	
+	public void logout(){
+		loginType=null;
+	}
 	public String isLoggedIn(){
 		if(loginType==null){
 			oLogger.warn("-------not loggedIn----------");

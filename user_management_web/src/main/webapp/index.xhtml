@@ -11,22 +11,11 @@
 </head>
 <body>
 	<h1>Wellcome</h1>
-	<!-- <h:form>
-		<h:inputText binding="#{valtozo1}" />
-		<h:commandButton value="Submit"
-			action="#{echoer.storeEcho(valtozo1.value)}" />
-	</h:form> -->
 	<h:form>
 		<h:outputLabel>Username</h:outputLabel>
 		<h:inputText binding="#{name}" />
 		<h:commandButton value="Login as user"
 			actionListener="#{userBean.login(name.value,roleBean.getRoleById(2).role)}"
-			action="users_list?faces-redirect=true" />
-		<h:commandButton value="Login as admin"
-			actionListener="#{userBean.insertUser(name.value,alma)}"
-			action="users_list?faces-redirect=true" />
-		<h:commandButton value="Login as superuser"
-			actionListener="#{userBean.insertUser(name.value,korte)}"
 			action="users_list?faces-redirect=true" />
 	</h:form>
 </body>

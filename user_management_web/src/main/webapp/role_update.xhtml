@@ -14,8 +14,10 @@
 </head>
 <body>
 
-	<h:form rendered="#{roleBean.getRoleById(roleBean.selectedRoleid).id != 0}">
-	<h:outputLabel>Modify the role</h:outputLabel>
+	<h:form
+		rendered="#{roleBean.getRoleById(roleBean.selectedRoleid).id != 0}">
+		<h1>Modify the role</h1>
+		<h:outputLabel>role</h:outputLabel>
 		<h:inputText title="id" value="#{roleBean.oRole.role}" />
 		<h:commandButton value="Submit"
 			actionListener="#{roleBean.updateRole(roleBean.oRole)}"
