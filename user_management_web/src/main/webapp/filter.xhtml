@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+	<title>Login</title>
+	<f:metadata>
+		<f:viewAction action="#{userBean.isLoggedIn()}" />
+	</f:metadata>
+</h:head>
+
+<h:body>
+
+	<h:form>
+		<h:outputLabel>Username</h:outputLabel>
+		<h:inputText binding="#{name}" />
+		<h:commandButton value="Login as user"
+			actionListener="#{userBean.login(name.value,roleBean.getRoleById(2).role)}"
+			action="users_list?faces-redirect=true" />
+		<h:commandButton value="Login as admin"
+			actionListener="#{userBean.insertUser(name.value,alma)}"
+			action="users_list?faces-redirect=true" />
+		<h:commandButton value="Login as superuser"
+			actionListener="#{userBean.insertUser(name.value,korte)}"
+			action="users_list?faces-redirect=true" />
+	</h:form>
+
+</h:body>
+</html>

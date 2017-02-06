@@ -11,10 +11,14 @@ public interface IUser {
 
 	User getUserById(int id);
 
+	List<User> searchUser(String name);
+
 	void insertUser(User user);
 
 	void deleteUser(int id);
 
 	void updateUser(User user);
+	
+	boolean login(String username,String role);
 
 }

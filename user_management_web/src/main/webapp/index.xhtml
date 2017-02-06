@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2" />
+<title>Login User</title>
+</head>
+<body>
+	<h1>Wellcome</h1>
+	<!-- <h:form>
+		<h:inputText binding="#{valtozo1}" />
+		<h:commandButton value="Submit"
+			action="#{echoer.storeEcho(valtozo1.value)}" />
+	</h:form> -->
+	<h:form>
+		<h:outputLabel>Username</h:outputLabel>
+		<h:inputText binding="#{name}" />
+		<h:commandButton value="Login as user"
+			actionListener="#{userBean.login(name.value,roleBean.getRoleById(2).role)}"
+			action="users_list?faces-redirect=true" />
+		<h:commandButton value="Login as admin"
+			actionListener="#{userBean.insertUser(name.value,alma)}"
+			action="users_list?faces-redirect=true" />
+		<h:commandButton value="Login as superuser"
+			actionListener="#{userBean.insertUser(name.value,korte)}"
+			action="users_list?faces-redirect=true" />
+	</h:form>
+</body>
+</html>

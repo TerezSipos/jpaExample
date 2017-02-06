@@ -54,8 +54,13 @@ public class RoleManagedBean implements IRole {
 	public Role getRoleById(int id) {
 		errorMessage = null;
 		try {
-			oRole = getRoleBean().getRoleById(id);
-			return oRole;
+			if (id != 0) {
+				oRole = getRoleBean().getRoleById(id);
+				return oRole;
+			} else {
+				errorMessage = "No selected role.";
+				throw new WebExeption(errorMessage);
+			}
 		} catch (EjbExeption e) {
 			errorMessage = e.getMessage();
 			throw new WebExeption(e.getMessage());
@@ -78,8 +83,13 @@ public class RoleManagedBean implements IRole {
 	public void deleteRole(int id) {
 		errorMessage = null;
 		try {
-			getRoleBean().deleteRole(id);
-			oRole = null;
+			if (id != 0) {
+				getRoleBean().deleteRole(id);
+				oRole = null;
+			} else {
+				errorMessage = "No selected role.";
+				throw new WebExeption(errorMessage);
+			}
 		} catch (EjbExeption e) {
 			errorMessage = e.getMessage();
 			throw new WebExeption(e.getMessage());
@@ -95,11 +105,11 @@ public class RoleManagedBean implements IRole {
 			oRole = null;
 		} catch (EjbExeption e) {
 			errorMessage = e.getMessage();
-			oLogger.error("++++++++++++"+errorMessage);
+			oLogger.error("++++++++++++" + errorMessage);
 			throw new WebExeption(e.getMessage());
-		}catch (Exception e) {
+		} catch (Exception e) {
 			errorMessage = e.getMessage();
-			oLogger.error("++++++++++++"+errorMessage+"++++++++++++");
+			oLogger.error("++++++++++++" + errorMessage + "++++++++++++");
 			throw new WebExeption(e.getMessage());
 		}
 	}

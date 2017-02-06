@@ -12,47 +12,58 @@
 <body>
 	<h:panelGrid columns="2" style="width: 100%"
 		columnClasses="forty-percent top-alignment, sixty-percent right-alignment">
+		
 		<h:column style="width: 100%">
-		<h:form>
-			<h:column>
-				<h1>Users</h1>
-				<h:selectOneListbox value="#{userBean.selectedUserid}">
-					<f:selectItems value="#{userBean.allUsers}" var="y"
-						itemLabel="#{y.username} #{y.roles}" itemValue="#{y.id}" />
-				</h:selectOneListbox>
-			</h:column>
-			<h:column>
-				<br />
-				<br />
-				<h:commandButton value="insert"
-					action="user_insert?faces-redirect=true" />
-				<h:commandButton value="update"
-					action="user_update?faces-redirect=true" />
-				<h:commandButton value="delete"
-					action="#{userBean.deleteUser(userBean.selectedUserid)}" />
-			</h:column>
-		</h:form>
-		</h:column>		
+			<h1>Users</h1>
+			<h:form>
+				<h:inputText binding="#{valtozo}" />
+				<h:commandButton binding="#{eredmeny}" value="Search"
+					action="#{userBean.searchUser(valtozo.value)}" />
+			</h:form>
+			#{userBean.errorMessage}
+			<br />
+			<br/>
+			
+			<h:form>
+				<h:column>
+					<h:selectOneListbox value="#{userBean.selectedUserid}">
+						<f:selectItems value="#{userBean.search}" var="y"
+							itemLabel="#{y.username} #{y.roles}" itemValue="#{y.id}" />
+					</h:selectOneListbox>
+				</h:column>
+				<h:column>
+					<br />
+					<br />
+					<h:commandButton value="insert"
+						action="user_insert?faces-redirect=true" />
+					<h:commandButton value="update"
+						action="user_update?faces-redirect=true" />
+					<h:commandButton value="delete"
+						action="#{userBean.deleteUser(userBean.selectedUserid)}" />
+				</h:column>
+			</h:form>
+
+		</h:column>
 		<h:column style="width: 100%">
-		<h:form>
-			<h:column>
-				<h1>Roles</h1>
-				<h:selectOneListbox value="#{roleBean.selectedRoleid}">
-					<f:selectItems value="#{roleBean.allRoles}" var="y"
-						itemLabel="#{y.role}" itemValue="#{y.id}" />
-				</h:selectOneListbox>
-			</h:column>
-			<h:column>
-				<br />
-				<br />
-				<h:commandButton value="insert"
-					action="role_insert?faces-redirect=true" />
-				<h:commandButton value="update"
-					action="role_update?faces-redirect=true" />
-				<h:commandButton value="delete"
-					action="#{roleBean.deleteRole(roleBean.selectedRoleid)}" />
-			</h:column>
-		</h:form>
+			<h:form>
+				<h:column>
+					<h1>Roles</h1>
+					<h:selectOneListbox value="#{roleBean.selectedRoleid}">
+						<f:selectItems value="#{roleBean.allRoles}" var="y"
+							itemLabel="#{y.role}" itemValue="#{y.id}" />
+					</h:selectOneListbox>
+				</h:column>
+				<h:column>
+					<br />
+					<br />
+					<h:commandButton value="insert"
+						action="role_insert?faces-redirect=true" />
+					<h:commandButton value="update"
+						action="role_update?faces-redirect=true" />
+					<h:commandButton value="delete"
+						action="#{roleBean.deleteRole(roleBean.selectedRoleid)}" />
+				</h:column>
+			</h:form>
 		</h:column>
 	</h:panelGrid>
 </body>

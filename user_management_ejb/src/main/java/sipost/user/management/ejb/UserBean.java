@@ -6,10 +6,14 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.jboss.logging.Logger;
 
 import sipost.user.management.common.IUser;
+import sipost.user.management.jpa.Role;
 import sipost.user.management.jpa.User;
 
 @Stateless
@@ -50,7 +54,7 @@ public class UserBean implements IUser {
 			user.setId(n + 1);
 			oEntityManager.persist(user);
 			oEntityManager.flush();
-		} catch (PersistenceException e) {	
+		} catch (PersistenceException e) {
 			oLogger.error(e);
 			EjbExeption.getCause(e);
 			throw new EjbExeption("--------Could not insert user.", e);
@@ -80,9 +84,49 @@ public class UserBean implements IUser {
 			oLogger.error(e);
 			EjbExeption.getCause(e);
 			throw new EjbExeption("Can't update user with specifield id: <" + user.getId() + ">", e);
-		
+
 		}
 	}
 
+	@Override
+	public List<User> searchUser(String name) {
+		try {
+			CriteriaBuilder cb = oEntityManager.getCriteriaBuilder();
+			CriteriaQuery<User> criteria = cb.createQuery(User.class);
+			Root<User> member = criteria.from(User.class);
+
+			criteria.select(member).where(cb.like(member.get("username"), "%" + name + "%"));
+			return oEntityManager.createQuery(criteria).getResultList();
+		} catch (PersistenceException e) {
+			oLogger.error(e);
+			EjbExeption.getCause(e);
+			throw new EjbExeption("Can't find any user.", e);
+		}
+	}
+
+	@Override
+	public boolean login(String username, String role) {
+		try {
+			CriteriaBuilder cb = oEntityManager.getCriteriaBuilder();
+			CriteriaQuery<User> criteria = cb.createQuery(User.class);
+			Root<User> member = criteria.from(User.class);
+
+			criteria.select(member).where(cb.equal(member.get("username"), username));
+			User u = oEntityManager.createQuery(criteria).getSingleResult();
+			Role r = new Role();
+			r.setRole(role);
+			if (u.getRoles().contains(r)) {
+				oLogger.info("----------user loged in as " + role);
+				return true;
+			} else {
+				oLogger.info(username + " can't log in as " + role);
+			}
+		} catch (PersistenceException e) {
+			oLogger.error(e);
+			EjbExeption.getCause(e);
+			throw new EjbExeption("Invalid username, can't log in.", e);
+		}
+		return false;
+	}
 
 }
