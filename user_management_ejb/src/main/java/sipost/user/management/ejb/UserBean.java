@@ -7,55 +7,82 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
+import org.jboss.logging.Logger;
+
 import sipost.user.management.common.IUser;
 import sipost.user.management.jpa.User;
 
 @Stateless
-public class UserBean implements IUser{
+public class UserBean implements IUser {
 	@PersistenceContext(unitName = "UserManagement")
 	private EntityManager oEntityManager;
+	private Logger oLogger = Logger.getLogger(UserBean.class);
 
 	@Override
 	public List<User> getAllUsers() {
-		@SuppressWarnings("unchecked")
-		List<User> users = (List<User>)oEntityManager.createNamedQuery("User.findAll").getResultList();
-		return users;
+		try {
+			@SuppressWarnings("unchecked")
+			List<User> users = (List<User>) oEntityManager.createNamedQuery("User.findAll").getResultList();
+			return users;
+		} catch (PersistenceException e) {
+			oLogger.error(e);
+			EjbExeption.getCause(e);
+			throw new EjbExeption("Can't find users", e);
+		}
 	}
 
 	@Override
 	public User getUserById(int id) {
-		try{
-		User u=oEntityManager.find(User.class, id);
-		return u;
-		}catch (PersistenceException e) {
-			e.printStackTrace();
-			return null;
-		}		
+		try {
+			User u = oEntityManager.find(User.class, id);
+			return u;
+		} catch (PersistenceException e) {
+			oLogger.error(e);
+			EjbExeption.getCause(e);
+			throw new EjbExeption("Can't find user with specifiel id: <" + id + ">", e);
+		}
 	}
 
 	@Override
 	public void insertUser(User user) {
-		int n = ((Number) oEntityManager.createNamedQuery("User.maxId").getSingleResult()).intValue();
-		user.setId(n+1);
-		oEntityManager.persist(user);	
-		oEntityManager.flush();
+		try {
+			int n = ((Number) oEntityManager.createNamedQuery("User.maxId").getSingleResult()).intValue();
+			user.setId(n + 1);
+			oEntityManager.persist(user);
+			oEntityManager.flush();
+		} catch (PersistenceException e) {	
+			oLogger.error(e);
+			EjbExeption.getCause(e);
+			throw new EjbExeption("--------Could not insert user.", e);
+		}
 	}
 
 	@Override
 	public void deleteUser(int id) {
-		oEntityManager.clear();
-		User u = getUserById(id);
-		oEntityManager.remove(u);
-		oEntityManager.flush();		
+		try {
+			oEntityManager.clear();
+			User u = getUserById(id);
+			oEntityManager.remove(u);
+			oEntityManager.flush();
+		} catch (PersistenceException e) {
+			oLogger.error(e);
+			EjbExeption.getCause(e);
+			throw new EjbExeption("Can't delete user with specifield id: <" + id + ">", e);
+		}
 	}
 
 	@Override
 	public void updateUser(User user) {
-		try{
-		oEntityManager.merge(user);		
-		}catch (Exception e) {
-			e.printStackTrace();
+		try {
+			oEntityManager.merge(user);
+			oEntityManager.flush();
+		} catch (PersistenceException e) {
+			oLogger.error(e);
+			EjbExeption.getCause(e);
+			throw new EjbExeption("Can't update user with specifield id: <" + user.getId() + ">", e);
+		
 		}
 	}
+
 
 }

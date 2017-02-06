@@ -10,6 +10,6 @@
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
    <error-page>
-        <location>/general-error.xhtml</location>
+        <location>/my_error.xhtml</location>
     </error-page>
 </web-app>

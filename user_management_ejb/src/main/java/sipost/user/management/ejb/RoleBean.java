@@ -1,6 +1,5 @@
 package sipost.user.management.ejb;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -26,8 +25,9 @@ public class RoleBean implements IRole {
 			List<Role> roles = (List<Role>) oEntityManager.createNamedQuery("Role.findAll").getResultList();
 			return roles;
 		} catch (PersistenceException e) {
-			oLogger.error(e.getMessage());
-			return new ArrayList<>();
+			oLogger.error(e);
+			EjbExeption.getCause(e);
+			throw new EjbExeption("Can't find roles", e);
 		}
 	}
 
@@ -36,8 +36,9 @@ public class RoleBean implements IRole {
 		try {
 			return oEntityManager.find(Role.class, id);
 		} catch (PersistenceException e) {
-			e.printStackTrace();
-			return null;
+			oLogger.error(e);
+			EjbExeption.getCause(e);
+			throw new EjbExeption("Can't find the sepidield role by id <" + id + ">", e);
 		}
 	}
 
@@ -49,7 +50,9 @@ public class RoleBean implements IRole {
 			oEntityManager.persist(role);
 			oEntityManager.flush();
 		} catch (PersistenceException e) {
-			e.printStackTrace();
+			oLogger.error(e);
+			EjbExeption.getCause(e);
+			throw new EjbExeption("Can't insert role <"+role.getRole()+">", e);
 		}
 	}
 
@@ -58,8 +61,11 @@ public class RoleBean implements IRole {
 		try {
 			Role r = oEntityManager.find(Role.class, id);
 			oEntityManager.remove(r);
-		} catch (Exception e) {
-			e.printStackTrace();
+			oEntityManager.flush();
+		} catch (PersistenceException e) {
+			oLogger.error(e);
+			EjbExeption.getCause(e);
+			throw new EjbExeption("Can't delete role", e);
 		}
 
 	}
@@ -70,9 +76,12 @@ public class RoleBean implements IRole {
 			Role r = oEntityManager.find(Role.class, role.getId());
 			if (r != null) {
 				oEntityManager.merge(role);
+				oEntityManager.flush();
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (PersistenceException e) {
+			oLogger.error(e);
+			EjbExeption.getCause(e);
+			throw new EjbExeption("Can't update role", e);
 		}
 	}
 

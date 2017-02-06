@@ -8,27 +8,33 @@ import javax.inject.Named;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import org.jboss.logging.Logger;
+
 import sipost.user.management.common.IUser;
+import sipost.user.management.ejb.EjbExeption;
 import sipost.user.management.jpa.Role;
 import sipost.user.management.jpa.User;
 
 @Named("userBean")
 @ApplicationScoped
 public class UserManagedBean implements IUser {
+	private Logger oLogger = Logger.getLogger(UserManagedBean.class);
 	private IUser oUserBean = null;
-	private User user;
+	private User user = null;
 	private int selectedUserid;
 	private List<Integer> rolesId = new ArrayList<>();
-	private Exception exeptionMessage;
+	private String errorMessage;
 
 	private IUser getUserBean() {
+		errorMessage = null;
 		if (oUserBean == null) {
 			try {
 				InitialContext jndi = new InitialContext();
 				oUserBean = (IUser) jndi.lookup(IUser.jndiNAME);
 			} catch (NamingException e) {
-				exeptionMessage = e;
-				e.printStackTrace();
+				errorMessage = e.getMessage();
+				oLogger.error(errorMessage);
+				throw new WebExeption(errorMessage);
 			}
 		}
 		return oUserBean;
@@ -36,44 +42,71 @@ public class UserManagedBean implements IUser {
 
 	@Override
 	public List<User> getAllUsers() {
-		return getUserBean().getAllUsers();
+		errorMessage = null;
+		try {
+			return getUserBean().getAllUsers();
+		} catch (EjbExeption e) {
+			errorMessage = e.getMessage();
+			throw new WebExeption(e.getMessage());
+		}
 	}
 
 	@Override
 	public User getUserById(int id) {
-		if (id != 0) {
-			user = getUserBean().getUserById(id);
-		}
+		errorMessage = null;
 		try {
-			return user;
-		} catch (Exception e) {
-			exeptionMessage = e;
-			throw e;
+			if (id != 0) {
+				user = getUserBean().getUserById(id);
+				return user;
+			}
+		} catch (EjbExeption e) {
+			errorMessage = e.getMessage();
+			throw new WebExeption(e.getMessage());
 		}
+		user = null;
+		return user;
 	}
 
 	@Override
-	public void insertUser(User user) {
-		try{
-		getUserBean().insertUser(user);
-		}catch (Exception e) {
-			exeptionMessage=e;
-			throw e;
+	public void insertUser(User user) throws WebExeption {
+		errorMessage = null;
+		try {
+			getUserBean().insertUser(user);
+		} catch (EjbExeption e) {
+			errorMessage = e.getMessage();
+			throw new WebExeption(e.getMessage());
 		}
 	}
 
 	@Override
 	public void deleteUser(int id) {
-		getUserBean().deleteUser(id);
-		selectedUserid = 0;
-		user = null;
+		errorMessage = null;
+		if(id==0){
+			errorMessage ="No selected item";
+			throw new WebExeption(errorMessage);
+		}
+		try {
+			getUserBean().deleteUser(id);
+			selectedUserid = 0;
+			user = null;
+		} catch (EjbExeption e) {
+			errorMessage = e.getMessage();
+			throw new WebExeption(e.getMessage());
+		}
 
 	}
 
 	@Override
 	public void updateUser(User p_user) {
-		getUserBean().updateUser(p_user);
-		selectedUserid = 0;
+		errorMessage = null;
+		try {
+			selectedUserid = 0;
+			getUserBean().updateUser(p_user);
+		} catch (EjbExeption e) {
+			errorMessage = e.getMessage();
+			oLogger.error("-------------------------------------" + errorMessage + "1111111111111");
+			throw new WebExeption(e.getMessage());
+		}
 	}
 
 	public int getSelectedUserid() {
@@ -113,6 +146,10 @@ public class UserManagedBean implements IUser {
 			}
 			getUser().setRoles(userRoles);
 		}
+	}
+
+	public String getErrorMessage() {
+		return errorMessage;
 	}
 
 }

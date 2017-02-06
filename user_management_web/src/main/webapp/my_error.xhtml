@@ -9,6 +9,17 @@
 <title>user-management-web | echo_list</title>
 </head>
 <body>
-	#{userBean.errorMessage}
+	<h:form rendered="#{userBean.errorMessage !=null}">
+		<h1>User operation failed</h1>
+		#{userBean.errorMessage}
+		<br />
+		<h:commandButton value="back" action="users_list?faces-redirect=true" />
+	</h:form>
+	<h:form rendered="#{roleBean.errorMessage !=null}">
+		<h1>Role operation failed</h1>
+		#{roleBean.errorMessage}
+		<br />
+		<h:commandButton value="back" action="users_list?faces-redirect=true" />
+	</h:form>
 </body>
 </html>
