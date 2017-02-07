@@ -3,6 +3,8 @@ package sipost.user.management.ejb;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
@@ -12,6 +14,7 @@ import javax.persistence.criteria.Root;
 
 import org.jboss.logging.Logger;
 
+import sipost.user.management.common.IRole;
 import sipost.user.management.common.IUser;
 import sipost.user.management.jpa.Role;
 import sipost.user.management.jpa.User;
@@ -105,7 +108,8 @@ public class UserBean implements IUser {
 	}
 
 	@Override
-	public boolean login(String username, String role) {
+	public boolean login(String username, int role) {
+		oLogger.warn("--------------------------" + role);
 		try {
 			CriteriaBuilder cb = oEntityManager.getCriteriaBuilder();
 			CriteriaQuery<User> criteria = cb.createQuery(User.class);
@@ -113,20 +117,26 @@ public class UserBean implements IUser {
 
 			criteria.select(member).where(cb.equal(member.get("username"), username));
 			User u = oEntityManager.createQuery(criteria).getSingleResult();
-			Role r = new Role();
-			r.setRole(role);
+
+			InitialContext jndi = new InitialContext();
+			IRole oRoleBean = (IRole) jndi.lookup(IRole.jndiNAME);
+
+			Role r = oRoleBean.getRoleById(role);
+			oLogger.warn("--------------------------" + r);
 			if (u.getRoles().contains(r)) {
-				oLogger.info("----------user loged in as " + role);
+				oLogger.info("----------user loged in as " + r.getRole());
 				return true;
 			} else {
-				oLogger.info(username + " can't log in as " + role);
+				oLogger.info(username + " can't log in as " + r.getRole());
 			}
 		} catch (PersistenceException e) {
 			oLogger.error(e);
 			EjbExeption.getCause(e);
-			throw new EjbExeption("Invalid username, can't log in.", e);
+			throw new EjbExeption("Invalid username, can't login.", e);
+		} catch (NamingException e) {
+			oLogger.error(e);
+			throw new EjbExeption("Invalid role, can't login", e);
 		}
 		return false;
 	}
-
 }

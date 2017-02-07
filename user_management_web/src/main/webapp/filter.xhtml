@@ -6,18 +6,17 @@
 
 <h:head>
 	<title>Login</title>
-	<f:metadata>
-		<f:viewAction action="#{userBean.isLoggedIn()}" />
-	</f:metadata>
 </h:head>
 
 <h:body>
-
+#{userBean.logout()}
+	<h2>Please log in.</h2>
+	<br />
 	<h:form>
 		<h:outputLabel>Username</h:outputLabel>
 		<h:inputText binding="#{name}" />
-		<h:commandButton value="Login as user"
-			actionListener="#{userBean.login(name.value,roleBean.getRoleById(2).role)}"
+		<h:commandButton value="Login as admin"
+			actionListener="#{userBean.login(name.value,1)}"
 			action="users_list?faces-redirect=true" />
 	</h:form>
 

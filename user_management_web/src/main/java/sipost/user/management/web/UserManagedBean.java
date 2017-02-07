@@ -1,9 +1,10 @@
 package sipost.user.management.web;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -16,15 +17,19 @@ import sipost.user.management.jpa.Role;
 import sipost.user.management.jpa.User;
 
 @Named("userBean")
-@ApplicationScoped
-public class UserManagedBean implements IUser {
-	private String loginType;
+@SessionScoped
+public class UserManagedBean implements Serializable, IUser {
+
+	private static final long serialVersionUID = 343694639300783486L;
+
+	private int loginType;
+	private String loggedInUser;
 	private Logger oLogger = Logger.getLogger(UserManagedBean.class);
 	private IUser oUserBean = null;
 	private User user = null;
 	private int selectedUserid;
 	private List<Integer> rolesId = new ArrayList<>();
-	private List<User> search=new ArrayList<>();
+	private List<User> search = new ArrayList<>();
 	private String errorMessage;
 
 	private IUser getUserBean() {
@@ -46,7 +51,7 @@ public class UserManagedBean implements IUser {
 	public List<User> getAllUsers() {
 		errorMessage = null;
 		try {
-			search= getUserBean().getAllUsers();
+			search = getUserBean().getAllUsers();
 			return search;
 		} catch (EjbExeption e) {
 			errorMessage = e.getMessage();
@@ -61,10 +66,9 @@ public class UserManagedBean implements IUser {
 			if (id != 0) {
 				user = getUserBean().getUserById(id);
 				return user;
-			}
-			else {
+			} else {
 				errorMessage = "No selected user.";
-				throw new WebExeption(errorMessage);			
+				throw new WebExeption(errorMessage);
 			}
 		} catch (EjbExeption e) {
 			errorMessage = e.getMessage();
@@ -75,9 +79,15 @@ public class UserManagedBean implements IUser {
 	@Override
 	public void insertUser(User user) throws WebExeption {
 		errorMessage = null;
+		oLogger.info("--------------new User:" + user);
 		try {
-			getUserBean().insertUser(user);
-			search=null;
+			search = null;
+			if (user.getRoles() != null && !user.getUsername().isEmpty()) {
+				getUserBean().insertUser(user);
+			} else {
+				errorMessage = "nead a username and at least one role";
+				throw new WebExeption(errorMessage);
+			}
 		} catch (EjbExeption e) {
 			errorMessage = e.getMessage();
 			throw new WebExeption(e.getMessage());
@@ -87,13 +97,13 @@ public class UserManagedBean implements IUser {
 	@Override
 	public void deleteUser(int id) {
 		errorMessage = null;
-		if(id==0){
-			errorMessage ="No selected item";
+		if (id == 0) {
+			errorMessage = "No selected item";
 			throw new WebExeption(errorMessage);
 		}
 		try {
 			getUserBean().deleteUser(id);
-			search=null;
+			search = null;
 			selectedUserid = 0;
 			user = null;
 		} catch (EjbExeption e) {
@@ -134,7 +144,7 @@ public class UserManagedBean implements IUser {
 	}
 
 	public List<Integer> getRolesId() {
-		rolesId=new ArrayList<>();
+		rolesId = new ArrayList<>();
 		if (user != null && user.getRoles() != null) {
 			for (Role r : user.getRoles()) {
 				rolesId.add(r.getId());
@@ -161,57 +171,107 @@ public class UserManagedBean implements IUser {
 
 	@Override
 	public List<User> searchUser(String name) {
-		try{
-			if(name.length()<3){
-				errorMessage="Name must be at least 3 caracter.";
+		try {
+			if (name == null || name.length() < 3) {
+				errorMessage = "Name must be at least 3 caracter.";
 				return search;
 			}
-			search=getUserBean().searchUser(name);
-			if(search.isEmpty()){
-				errorMessage="Can't find any user with specifield name.";
+			search = getUserBean().searchUser(name);
+			if (search.isEmpty()) {
+				errorMessage = "Can't find any user with specifield name.";
 			}
 			return search;
-		}catch (EjbExeption e) {
+		} catch (EjbExeption e) {
 			errorMessage = e.getMessage();
 			throw new WebExeption(e.getMessage());
 		}
 	}
 
 	public List<User> getSearch() {
-		if(search.isEmpty()){
-			search=getAllUsers();
+		if (search == null || search.isEmpty()) {
+			search = getAllUsers();
 		}
 		return search;
 	}
 
 	@Override
-	public boolean login(String username, String role) {
-		oLogger.info(username+ "------------"+role);
-		try{
-			if(getUserBean().login(username, role)){
-				loginType=role;
+	public boolean login(String username, int role) {
+		validateString(username);
+		oLogger.info(username + "------------" + role);
+		try {
+			if (getUserBean().login(username, role)) {
+				loginType = role;
+				loggedInUser = username;
 				return true;
 			}
-			errorMessage ="Invalid username";
-		}catch (EjbExeption e) {
+			errorMessage = "Invalid username";
+			throw new WebExeption(errorMessage);
+		} catch (EjbExeption e) {
 			errorMessage = e.getMessage();
+			throw new WebExeption(errorMessage);
 		}
-		return false;
 	}
-	
-	public void logout(){
-		loginType=null;
+
+	public boolean login(String username) {
+		validateString(username);
+		try {
+			if (login(username, 1)) {// admin
+				loginType = 1;
+				loggedInUser = username;
+				return true;
+			}
+		} catch (WebExeption e) {
+			oLogger.info(e.getMessage());
+		}
+		try {
+			if (login(username, 2)) {// user
+				loggedInUser = username;
+				loginType = 2;
+				return true;
+			}
+		} catch (WebExeption e) {
+			oLogger.info(e.getMessage());
+		}
+		errorMessage = "Can't login as User or Admin";
+		throw new WebExeption(errorMessage);
 	}
-	public String isLoggedIn(){
-		if(loginType==null){
+
+	public void logout() {
+		loginType = 0;
+		loggedInUser = null;
+	}
+
+	public String isLoggedIn() {
+		if (loginType == 0) {
 			oLogger.warn("-------not loggedIn----------");
-			return "filter.xhtml";
-		}else {
+			return "index.xhtml";
+		} else {
 			oLogger.warn("logged in as " + loginType + "-------------");
 			return null;
-		}		
+		}
 	}
-	
-	
+
+	public String isAdmin() {
+		if (loginType == 1) {// admin
+			oLogger.info("---------------" + loggedInUser);
+			return null;
+		} else {
+			oLogger.info("--------------- not admin");
+			return "filter.xhtml";
+		}
+	}
+
+	public String getLoggedInUser() {
+		return loggedInUser;
+	}
+
+	private boolean validateString(String value) {
+		if (value == null || value.length() < 3) {
+			errorMessage = "Name must be at least 3 caracter.";
+			throw new WebExeption(errorMessage);
+		}
+		return true;
+
+	}
 
 }

@@ -14,8 +14,8 @@
 	<h:form>
 		<h:outputLabel>Username</h:outputLabel>
 		<h:inputText binding="#{name}" />
-		<h:commandButton value="Login as user"
-			actionListener="#{userBean.login(name.value,roleBean.getRoleById(2).role)}"
+		<h:commandButton value="Login (as user or admin)"
+			actionListener="#{userBean.login(name.value)}"
 			action="users_list?faces-redirect=true" />
 	</h:form>
 </body>

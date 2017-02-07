@@ -7,13 +7,17 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2" />
-<title>user-management-web | echo_list</title>
+<f:metadata>
+	<f:viewAction action="#{userBean.isLoggedIn()}" />
+</f:metadata>
+<title>user-management-web | lists</title>
 </head>
 <body>
 	<h:form>
 		<h:commandButton value="log out"
 			actionListener="#{userBean.logout}"
 			action="index?faces-redirect=true" />
+			#{userBean.loggedInUser}
 		
 	</h:form>
 	<h:panelGrid columns="2" style="width: 100%"
@@ -43,16 +47,16 @@
 					<h:commandButton value="Get All Users"
 						action="#{userBean.getAllUsers}" />
 					<h:commandButton value="New User"
-						action="user_insert?faces-redirect=true" />
+						action="user_insert?faces-redirect=true" rendered="#{userBean.isAdmin()==null}"/>
 					<h:commandButton value="Edit user"
-						action="user_update?faces-redirect=true" />
+						action="user_update?faces-redirect=true" rendered="#{userBean.isAdmin()==null}" />
 					<h:commandButton value="Delete User"
-						action="#{userBean.deleteUser(userBean.selectedUserid)}" />
+						action="#{userBean.deleteUser(userBean.selectedUserid)}" rendered="#{userBean.isAdmin()==null}" />
 				</h:column>
 			</h:form>
 
 		</h:column>
-		<h:column style="width: 100%">
+		<h:column style="width: 100%" rendered="#{userBean.isAdmin()==null}">
 			<h:form>
 				<h:column>
 					<h1>Roles</h1>

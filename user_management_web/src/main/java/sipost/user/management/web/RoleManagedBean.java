@@ -1,21 +1,25 @@
 package sipost.user.management.web;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import org.jboss.logging.Logger;
+
 import sipost.user.management.common.IRole;
 import sipost.user.management.ejb.EjbExeption;
 import sipost.user.management.jpa.Role;
-import org.jboss.logging.Logger;
 
 @Named("roleBean")
-@ApplicationScoped
-public class RoleManagedBean implements IRole {
+@SessionScoped
+public class RoleManagedBean implements Serializable, IRole {
+	private static final long serialVersionUID = 7844686164861201939L;
+
 	private IRole oRoleBean;
 	private List<Role> roles = new ArrayList<>();
 	private Role oRole;

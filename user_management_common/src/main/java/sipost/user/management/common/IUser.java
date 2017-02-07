@@ -19,6 +19,6 @@ public interface IUser {
 
 	void updateUser(User user);
 	
-	boolean login(String username,String role);
+	boolean login(String username, int role);
 
 }
