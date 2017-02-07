@@ -29,8 +29,8 @@ public class UserManagedBean implements Serializable, IUser {
 	private User user = null;
 	private int selectedUserid;
 	private List<Integer> rolesId = new ArrayList<>();
-	private List<User> search = new ArrayList<>();
 	private String errorMessage;
+	private List<User> search = new ArrayList<>();
 
 	private IUser getUserBean() {
 		errorMessage = null;
@@ -51,8 +51,7 @@ public class UserManagedBean implements Serializable, IUser {
 	public List<User> getAllUsers() {
 		errorMessage = null;
 		try {
-			search = getUserBean().getAllUsers();
-			return search;
+			return getUserBean().getAllUsers();
 		} catch (EjbExeption e) {
 			errorMessage = e.getMessage();
 			throw new WebExeption(e.getMessage());
@@ -81,7 +80,6 @@ public class UserManagedBean implements Serializable, IUser {
 		errorMessage = null;
 		oLogger.info("--------------new User:" + user);
 		try {
-			search = null;
 			if (user.getRoles() != null && !user.getUsername().isEmpty()) {
 				getUserBean().insertUser(user);
 			} else {
@@ -103,7 +101,6 @@ public class UserManagedBean implements Serializable, IUser {
 		}
 		try {
 			getUserBean().deleteUser(id);
-			search = null;
 			selectedUserid = 0;
 			user = null;
 		} catch (EjbExeption e) {
@@ -171,12 +168,13 @@ public class UserManagedBean implements Serializable, IUser {
 
 	@Override
 	public List<User> searchUser(String name) {
+
 		try {
 			if (name == null || name.length() < 3) {
 				errorMessage = "Name must be at least 3 caracter.";
-				return search;
+				return null;
 			}
-			search = getUserBean().searchUser(name);
+			List<User> search = getUserBean().searchUser(name);
 			if (search.isEmpty()) {
 				errorMessage = "Can't find any user with specifield name.";
 			}
@@ -188,9 +186,6 @@ public class UserManagedBean implements Serializable, IUser {
 	}
 
 	public List<User> getSearch() {
-		if (search == null || search.isEmpty()) {
-			search = getAllUsers();
-		}
 		return search;
 	}
 

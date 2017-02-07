@@ -14,6 +14,7 @@ import sipost.user.management.jpa.Role;
 
 @Stateless
 public class RoleBean implements IRole {
+	
 	@PersistenceContext(unitName = "UserManagement")
 	private EntityManager oEntityManager;
 	private Logger oLogger = Logger.getLogger(RoleBean.class);
