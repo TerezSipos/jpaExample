@@ -31,6 +31,7 @@ public class UserManagedBean implements Serializable, IUser {
 	private List<Integer> rolesId = new ArrayList<>();
 	private String errorMessage;
 	private List<User> search = new ArrayList<>();
+	private String searchMessage;
 
 	private IUser getUserBean() {
 		errorMessage = null;
@@ -80,10 +81,11 @@ public class UserManagedBean implements Serializable, IUser {
 		errorMessage = null;
 		oLogger.info("--------------new User:" + user);
 		try {
-			if (user.getRoles() != null && !user.getUsername().isEmpty()) {
+			validateString(user.getUsername());
+			if (user.getRoles() != null) {
 				getUserBean().insertUser(user);
 			} else {
-				errorMessage = "nead a username and at least one role";
+				errorMessage = "select at least one role";
 				throw new WebExeption(errorMessage);
 			}
 		} catch (EjbExeption e) {
@@ -168,15 +170,17 @@ public class UserManagedBean implements Serializable, IUser {
 
 	@Override
 	public List<User> searchUser(String name) {
-
+		searchMessage = null;
 		try {
 			if (name == null || name.length() < 3) {
-				errorMessage = "Name must be at least 3 caracter.";
+				searchMessage = "Name must be at least 3 caracter.";
+				search = new ArrayList<>();
 				return null;
 			}
-			List<User> search = getUserBean().searchUser(name);
+			search = getUserBean().searchUser(name);
 			if (search.isEmpty()) {
-				errorMessage = "Can't find any user with specifield name.";
+				searchMessage = "Can't find any user with specifield name.";
+				return null;
 			}
 			return search;
 		} catch (EjbExeption e) {
@@ -186,11 +190,16 @@ public class UserManagedBean implements Serializable, IUser {
 	}
 
 	public List<User> getSearch() {
+		oLogger.info("++++++++" + search.size());
 		return search;
 	}
 
 	@Override
 	public boolean login(String username, int role) {
+		searchMessage=null;
+		errorMessage=null;
+		search=new ArrayList<>();
+		
 		validateString(username);
 		oLogger.info(username + "------------" + role);
 		try {
@@ -266,7 +275,10 @@ public class UserManagedBean implements Serializable, IUser {
 			throw new WebExeption(errorMessage);
 		}
 		return true;
+	}
 
+	public String getSearchMessage() {
+		return searchMessage;
 	}
 
 }

@@ -8,7 +8,7 @@ import javax.persistence.PersistenceException;
 import org.jboss.logging.Logger;
 
 public class EjbExeption extends EJBException {
-	private final static String DELETE_ERROR_MESSAGE = "Cannot delete role (have user with coresponding role)";
+	private final static String DELETE_ERROR_MESSAGE = "Cannot delete role (there is user with this role)";
 
 	private static final long serialVersionUID = 5633917663462543264L;
 	private static Logger oLogger = Logger.getLogger(EjbExeption.class);

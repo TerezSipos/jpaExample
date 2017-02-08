@@ -74,6 +74,7 @@ public class RoleManagedBean implements Serializable, IRole {
 	@Override
 	public void insertRole(Role role) {
 		errorMessage = null;
+		validateString(role.getRole());
 		try {
 			getRoleBean().insertRole(role);
 		} catch (EjbExeption e) {
@@ -104,6 +105,7 @@ public class RoleManagedBean implements Serializable, IRole {
 	@Override
 	public void updateRole(Role role) {
 		errorMessage = null;
+		validateString(role.getRole());
 		try {
 			getRoleBean().updateRole(role);
 			oRole = null;
@@ -149,6 +151,14 @@ public class RoleManagedBean implements Serializable, IRole {
 
 	public String getErrorMessage() {
 		return errorMessage;
+	}
+	
+	private boolean validateString(String value) {
+		if (value == null || value.length() < 3) {
+			errorMessage = "Name must be at least 3 caracter.";
+			throw new WebExeption(errorMessage);
+		}
+		return true;
 	}
 
 }

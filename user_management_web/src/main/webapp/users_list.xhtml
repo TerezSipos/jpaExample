@@ -68,5 +68,19 @@
 			</h:form>
 		</h:column>
 	</h:panelGrid>
+	<br />
+	<h:form>
+		<h:inputText binding="#{valtozo}" />
+		<h:commandButton value="Search" var="eredmeny"
+			action="#{userBean.searchUser(valtozo.value)}">
+		</h:commandButton>
+	</h:form>
+	#{userBean.searchMessage}
+	<br />
+	<ui:repeat value="#{userBean.search}" var="value">
+  	  #{value.username} #{value.roles} <br />
+	</ui:repeat>
+	<br />
+	<br />
 </body>
 </html>

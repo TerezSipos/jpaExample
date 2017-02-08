@@ -28,7 +28,7 @@ public class RoleBean implements IRole {
 		} catch (PersistenceException e) {
 			oLogger.error(e);
 			EjbExeption.getCause(e);
-			throw new EjbExeption("Can't find roles", e);
+			throw new EjbExeption(ErrorMessages.GET_ROLE_ALL, e);
 		}
 	}
 
@@ -39,7 +39,7 @@ public class RoleBean implements IRole {
 		} catch (PersistenceException e) {
 			oLogger.error(e);
 			EjbExeption.getCause(e);
-			throw new EjbExeption("Can't find the sepidield role by id <" + id + ">", e);
+			throw new EjbExeption(ErrorMessages.GET_ROLE_BY_ID, e);
 		}
 	}
 
